@@ -1,0 +1,10 @@
+track_id,frame,error,detail
+0,28,fragmentation_suspect,ID xuat hien giua sequence o 35 m (khong phai frame dau)
+0,33,fragmentation_suspect,ID ket thuc giua sequence o 28 m
+0,28,no_interpolation,6/6 frame la keyframe — co the dang ve tay tung frame
+1,36,fragmentation_suspect,ID xuat hien giua sequence o 38 m (khong phai frame dau)
+1,41,fragmentation_suspect,ID ket thuc giua sequence o 31 m
+1,36,no_interpolation,6/6 frame la keyframe — co the dang ve tay tung frame
+2,16,fragmentation_suspect,ID xuat hien giua sequence o 28 m (khong phai frame dau)
+2,21,fragmentation_suspect,ID ket thuc giua sequence o 21 m
+2,16,no_interpolation,6/6 frame la keyframe — co the dang ve tay tung frame

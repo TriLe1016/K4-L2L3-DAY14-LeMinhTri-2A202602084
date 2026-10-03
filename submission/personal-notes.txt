@@ -2,34 +2,44 @@ PHIẾU CÁ NHÂN — DAY 14
 Điền file này, chạy QC vào submission/qc-j01 và submission/qc-practice, commit rồi nộp link repo.
 Không dán ảnh, toạ độ điểm hay nội dung file export vào đây.
 
-Họ tên / mã học viên:
-Object J01 (a/b/c/d theo docs/cases.md) / track ID trong task J01:
-Phiên bản CVAT / overlay đã bật (có/không):
+Họ tên / mã học viên: Lê Minh Trí / 2A202602084
+Object J01 (a/b/c/d theo docs/cases.md) / track ID trong task J01: J01-a (frame neo 23, ROI [1531, 839, 1896, 1041]) / track ID: 0
+Phiên bản CVAT / overlay đã bật (có/không): 2.74.1 / có
+Lựa chọn object: ROI frame 23 có ô tô xám và một xe máy chạy phía trước; chọn ô tô xám vì tâm gần tâm ROI nhất và khung ROI (~365 × 200 px) đúng dáng ô tô.
 
 J01 — TRACK LÕI
-Frame fit và lý do:
-L / W / H (m):
-Keyframe quan trọng và lý do:
-Đã bấm F qua đủ frame 0–65 (có/không):
-Đoạn thưa / che khuất / dễ nhầm identity:
+Frame fit và lý do: frame 34 — xe gần nhất (~8,5 m), nhiều điểm nhất trong hộp của cả track (~6.400 điểm, frame 32–35 đều ~6.300), thấy rõ mép dài, mép ngang và nóc xe; không dính object khác (chỉ ~500 điểm nằm sát ngoài hộp trong 0,5 m).
+L / W / H (m): 4,09 / 2,02 / 1,78 (bản export 2, frame 20–58). Bản đầu là 4,50 / 2,28 / 1,74 → đã fit lại, W 2,28 m quá rộng so với ô tô con.
+Keyframe quan trọng và lý do: Xe đỗ bên phải, xe ego chạy vượt qua (xe ở phía trước ~39 m tại frame 7, gần nhất ~8,5 m ở frame 34, phía sau ~40 m tại frame 58). Hướng quỹ đạo tương đối của xe đỗ đổi từ ~15° (frame 7–19) về ~0° (từ frame ~31) → xe ego đang rẽ nhẹ trong đoạn ~15–31, nên heading của hộp trong hệ ego đổi theo là hợp lệ. Keyframe cần: frame đầu (7), cuối đoạn heading ~15° (~17), hết rẽ (~31–33), frame gần nhất (34), frame cuối (58), cộng chỗ nội suy lệch khỏi cụm điểm.
+Đã bấm F qua đủ frame 0–65 (có/không): có
+Đoạn thưa / che khuất / dễ nhầm identity: Theo phép chiếu (calibration của overlay, camera trước HFOV ~55°): xe nằm trọn trong image_1 tới frame 21, bị cắt dần ở mép phải từ frame 22, ra hẳn khỏi image_1 từ frame 26; frame ~34 xe ngang hàng xe ego, sau đó ở phía sau. Từ frame 26 trở đi chỉ LiDAR thấy xe → giữ track, đây là FOV chứ không phải occlusion. Frame 29–31 bật occluded vì xe máy chắn tầm nhìn camera tới ô tô (quan sát trên ảnh camera khác, vì từ frame 26 xe đã ra khỏi image_1). Số điểm LiDAR trong hộp không giảm (2.400–3.900 so với 2.600–2.900 ở frame 26–28) → che chủ yếu ở góc nhìn camera, hộp vẫn fit theo point cloud. Đoạn xa ở đầu (frame 7–19, 23–39 m) và cuối (frame ~50–58, 28–40 m) điểm thưa → giữ nguyên L/W/H tham chiếu. (Quan sát ban đầu ghi xe rời image_1 ở frame 51 — đối chiếu phép chiếu thì không khớp, có thể đã nhìn nhầm sang xe khác; dùng frame 26.)
 
 SELF-QC (từ qc_tracks.csv / qc_flags.csv)
-Lần QC đầu — cờ của track J01 (loại, frame):
+Lần QC đầu — cờ của track J01 (loại, frame): (1) fragmentation_suspect, frame 23 — ID xuất hiện giữa sequence ở 18 m; (2) fragmentation_suspect, frame 56 — ID kết thúc giữa sequence ở 37 m; (3) no_interpolation — 34/34 frame là keyframe. Không cờ nhưng tự phát hiện: heading đổi 6,3° → 0,6° ở frame 38; bước dịch tâm không đều (1,19–1,96 m/frame).
 Quyết định cho từng cờ (sửa / giữ vì hợp lệ / chưa đủ evidence) và lý do:
+- (1) frame 23: ban đầu ghi GIỮ VÌ HỢP LỆ (nhìn image_1 không thấy xe ở 0–22). Kiểm lại point cloud thấy cụm điểm cùng xe từ frame 7 → đổi thành SỬA, kéo dài track về frame 7.
+- (2) frame 56: CHƯA ĐỦ EVIDENCE → kiểm frame 57–65. Kết quả: còn điểm tới frame 58 → kéo dài tới 58.
+- (3) no_interpolation: SỬA một phần. Không xoá hàng loạt để giảm cờ; chỉ bỏ keyframe ở các frame đặt tay bị rung để nội suy mượt hơn.
+- Heading frame 38: ban đầu định SỬA về một heading cố định. Sau QC 2 đổi quyết định: hướng quỹ đạo cho thấy xe ego rẽ ở frame ~15–31, nên heading đổi là đúng; chỉ cần đổi mượt theo quỹ đạo thay vì nhảy bậc.
 Đã sửa gì sau QC đầu; QC cuối còn cờ nào:
-Nhận xét của bạn cùng cặp và bạn đồng ý/không đồng ý vì sao:
+- Sau QC đầu: kéo dài track 23–56 → 7–58; fit lại L/W/H thành 4,09 / 2,02 / 1,78; bật occluded frame 29–31.
+- QC lần 2 (52 frame, 7–58): (a) dimension_drift frame 20 — L 3,73 → 4,09 m (8,8%): frame 7–19 (xa, 23–39 m, điểm thưa) dùng 3,73 / 2,02 / 1,85 → SỬA, đặt lại 4,09 / 2,02 / 1,78 cho frame 7–19 (lỗi co box theo frame thưa). (b) fragmentation_suspect frame 7 (39 m) — CHƯA ĐỦ EVIDENCE: đếm điểm tại vị trí ngoại suy theo quỹ đạo, frame 6→0 vẫn còn 193 → 87 điểm tập trung gọn trong hộp (gần như không có điểm sát ngoài hộp), giảm đều theo khoảng cách → nhiều khả năng xe vẫn có mặt ở frame 0–6. Chưa kéo dài trong buổi lab: ở frame 0 vị trí ngoại suy nằm gần thẳng trước xe ego (lúc ego đang rẽ), có thể lẫn với xe khác chạy phía trước → chưa chắc cùng identity, giữ bắt đầu ở frame 7 và ghi chưa đủ evidence. (c) fragmentation_suspect frame 58 (40 m, phía sau) — CHƯA ĐỦ EVIDENCE: track có outside từ frame 59 (export không còn bản ghi 59–65). Tại vị trí ngoại suy, frame 59→65 còn 110 → 26 điểm trong hộp nhưng nhiều điểm lẫn xung quanh (vật khác gần) → chưa tách được cụm xe khỏi vật xung quanh ở 41–51 m phía sau, giữ outside ở frame 59 và ghi chưa đủ evidence. (d) no_interpolation 52/52 — SỬA một phần như trên. Heading 16,0° → 13,2° → 6,9° → 0,6° nhảy bậc ở frame 18/19 và 32, trong khi quỹ đạo đổi dần → làm mượt bằng keyframe ~17 và ~31–33.
+- Sau QC 2: đặt lại 4,09 / 2,02 / 1,78 cho frame 7 và 19; bỏ keyframe 8–18 để CVAT nội suy (heading đổi dần 16,0° → 6,9°, hết hộp co ở đoạn xa).
+- QC lần 3 (52 frame, 41 keyframe, L/W/H drift = 0): còn 2 cờ fragmentation_suspect ở frame 7 (39 m) và 58 (40 m) — xem (b), (c) ở trên: đếm điểm cho thấy xe có thể còn ở frame 0–6 và 59–65, nhưng identity/cụm điểm chưa chắc → chưa đủ evidence, không nối. Hết dimension_drift và no_interpolation. Còn lại (không cờ): heading giữ 6,9° ở frame 19–31 rồi nhảy 6,3° ở frame 32, trong khi quỹ đạo đổi dần → giữ trong bản nộp: bước nhảy 6,3° nhỏ, tâm hộp vẫn theo cụm điểm; ghi lại để làm mượt nếu có thời gian rework.
+- QC cuối = QC lần 3 (bản export cuối của task J01): 52 frame (7–58), 41 keyframe, L/W/H 4,09 / 2,02 / 1,78, drift = 0; còn 2 cờ fragmentation_suspect (frame 7, 58) — chưa đủ evidence như (b), (c). Không sửa ngưỡng hay code QC.
+Nhận xét của bạn cùng cặp và bạn đồng ý/không đồng ý vì sao: Không có bạn cùng cặp; tự review lại đoạn frame 22–31 (xe ra khỏi FOV image_1, heading đổi khi xe ego rẽ).
 
 CAMERA–LIDAR (overlay trên image_1)
-Ca bình thường (frame / quan sát):
-Ca khó (frame / quan sát 2D / quan sát 3D):
-Giả thuyết nguyên nhân (annotation / FOV / occlusion / sparse / nghi calibration / chưa đủ evidence):
-Hành động (sửa / giữ / báo Lab Coach) và lý do:
+Ca bình thường (frame / quan sát): frame 20 — xe nằm trọn trong image_1 (~21 m), cụm điểm rõ. Overlay: nét chiếu bao đúng ô tô xám, đầu–đuôi khớp.
+Ca khó (frame / quan sát 2D / quan sát 3D): frame 23 (frame neo) — 2D: xe ở sát mép phải image_1, nét chiếu bị cắt một phần ở mép ảnh; phần nét chiếu còn trong ảnh bao đúng ô tô. 3D: ~18 m, cụm điểm đủ, hộp giữ 4,09 / 2,02 / 1,78.
+Giả thuyết nguyên nhân (annotation / FOV / occlusion / sparse / nghi calibration / chưa đủ evidence): frame 23 — FOV: xe bị cắt ở rìa ảnh camera trước, không phải lỗi annotation hay calibration. Từ frame 26 xe ngoài FOV image_1 nên overlay không vẽ được, không dùng ảnh để kết luận.
+Hành động (sửa / giữ / báo Lab Coach) và lý do: GIỮ nhãn ở frame 20 và 23 vì overlay khớp ô tô; giữ occluded 29–31 vì camera bị xe máy che. Không báo Lab Coach vì không có dấu hiệu nhiều xe lệch cùng chiều.
 
 CASE NGẮN (task practice)
-Case → track ID (ví dụ B01 → 3):
-Case đã xong:
-Case đang dở / chỗ kẹt:
-fragmentation_suspect ở đầu/cuối case đã kiểm là do cách cắt case (có/không):
+Case → track ID (ví dụ B01 → 3): B01 → 2, B02 → 0, B03 → 1 (task Day14 practice LeMinhTri)
+Case đã xong: B01 (16–21, 4,47 / 1,74 / 2,07 m), B02 (28–33, 3,59 / 1,66 / 1,53 m), B03 (36–41, 3,93 / 2,02 / 1,51 m); mỗi case giữ một L/W/H, outside ngay sau frame cuối.
+Case đang dở / chỗ kẹt: Không có case dở. B02, B03 lúc đầu vẽ nhầm trong task J01 (chưa tạo task practice) → đã chuyển sang task practice bằng export/import Datumaro 3D, xoá khỏi task J01; B01 vẽ lại trong task practice. B04–B06 chưa làm (hết thời gian).
+fragmentation_suspect ở đầu/cuối case đã kiểm là do cách cắt case (có/không): có — 6 cờ, đúng frame đầu/cuối của B01, B02, B03. Thêm 3 cờ no_interpolation (6/6 keyframe mỗi case): giữ, vì case chỉ 6 frame và mỗi frame đã chỉnh theo cụm điểm.
 
 THỜI GIAN
-J01 / case ngắn / QC và fusion:
+J01 / case ngắn / QC và fusion: ~30 phút / ~10 phút / ~10 phút
